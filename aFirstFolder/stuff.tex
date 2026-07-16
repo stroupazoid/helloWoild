@@ -142,7 +142,8 @@ function checkAndDisplayMatrix(studentInput) {
     
     // 5. If it passes all tests, show the success message!
     if (feedbackElement) {
-        feedbackElement.innerHTML = "<span style='color: green; font-weight: bold; font-size: 1.1em;'>✓ Good job! Your matrix is associative!</span>";
+        // Using "&#10003;" (HTML Entity) instead of the literal "✓" character prevents PDF compile errors
+        feedbackElement.innerHTML = "<span style='color: green; font-weight: bold; font-size: 1.1em;'>&#10003; Good job! Your matrix is associative!</span>";
     }
     return true; 
 }
@@ -172,13 +173,11 @@ Enter your list of 9 numbers here:
 \answer[validator=checkAndDisplayMatrix]{0, 1, 2, 1, 2, 0, 2, 0, 1}
 \]
 
-% These raw HTML div tags acts as anchors for our Javascript to inject output dynamically!
-\begin{onlineOnly}
-\begin{rawhtml}
-<div id="matrixDisplay" style="margin-top: 15px; margin-bottom: 15px;"></div>
-<div id="matrixFeedback" style="margin-top: 10px; font-weight: bold;"></div>
-\end{rawhtml}
-\end{onlineOnly}
+% Safe way to inject HTML into the webpage without breaking PDF compilation:
+\ifdefined\HCode
+\HCode{<div id="matrixDisplay" style="margin-top: 15px; margin-bottom: 15px;"></div>}
+\HCode{<div id="matrixFeedback" style="margin-top: 10px; font-weight: bold;"></div>}
+\fi
 
 \end{problem}
 

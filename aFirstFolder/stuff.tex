@@ -68,6 +68,81 @@ By looking at the matrix $M$, you can visually identify algebraic properties of 
 \end{itemize}
 
 
+Enter a list of 9 numbers to create an associative 3x3 Cayley table.
 
+\begin{javascript}
+function checkAssociativeCayleyList(studentInput) {
+    var rawText = studentInput.toString(); 
+    
+    // Parse all numbers sequentially out of the student's text input.
+    // This looks for any sequence of digits, ignoring commas, spaces, or brackets.
+    var numbers = rawText.match(/\d+/g);
+    
+    // 1. Safety check: We need exactly 9 numbers.
+    if (!numbers || numbers.length !== 9) {
+        return false; 
+    }
+    
+    // Map the parsed strings to actual integers
+    var entries = numbers.map(Number);
+    
+    // 2. Restrict entries strictly to the elements 0, 1, or 2
+    for (var i = 0; i < 9; i++) {
+        if (entries[i] !== 0 && entries[i] !== 1 && entries[i] !== 2) {
+            return false; 
+        }
+    }
+    
+    // 3. Reconstruct the list into a 3x3 Cayley Table matrix,
+    // assuming reading order: row 1, then row 2, then row 3.
+    var T = [
+        [entries[0], entries[1], entries[2]], // Row 1
+        [entries[3], entries[4], entries[5]], // Row 2
+        [entries[6], entries[7], entries[8]]  // Row 3
+    ];
+    
+    // 4. Test for associativity: (a * b) * c === a * (b * c)
+    // where elements are {0, 1, 2} mapped directly to matrix indices.
+    for (var a = 0; a < 3; a++) {
+        for (var b = 0; b < 3; b++) {
+            for (var c = 0; c < 3; c++) {
+                var LHS = T[T[a][b]][c]; 
+                var RHS = T[a][T[b][c]]; 
+                if (LHS !== RHS) {
+                    return false; // Not associative
+                }
+            }
+        }
+    }
+    
+    return true; // Meets all conditions
+}
+\end{javascript}
+
+\begin{problem}
+Provide a list of $9$ numbers chosen from $\{0, 1, 2\}$ that form a $3 \times 3$ associative Cayley table.
+
+\bigskip
+\noindent\textbf{How to enter your answer:}
+\begin{itemize}
+    \item You must enter exactly \textbf{9 numbers} separated by commas.
+    \item Your list represents the matrix written row-by-row: \textbf{row 1, then row 2, then row 3}.
+    \item For example, if you want your table to be:
+    \[
+    \begin{bmatrix}
+    0 & 1 & 2 \\
+    1 & 2 & 0 \\
+    2 & 0 & 1 
+    \end{bmatrix}
+    \]
+    You should type: \textbf{0, 1, 2, 1, 2, 0, 2, 0, 1} into the box.
+\end{itemize}
+\bigskip
+
+Enter your list of 9 numbers here:
+\[
+\answer[validator=checkAssociativeCayleyList]{0, 1, 2, 1, 2, 0, 2, 0, 1}
+\]
+\end{problem}
 
 \end{document}

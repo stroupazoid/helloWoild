@@ -67,4 +67,78 @@ By looking at the matrix $M$, you can visually identify algebraic properties of 
     \]
 \end{itemize}
 
+
+
+Enter a 3x3 Cayley table and check for associativity.
+
+\begin{javascript}
+function checkAssociativeCayley(studentInput) {
+    // 1. Get the raw string input or parsed elements
+    // Ximera's studentInput.evaluate() or .toString() exposes the math structure
+    var rawText = studentInput.toString(); 
+    
+    // We expect a LaTeX matrix structure. Usually represented as:
+    // "[[row1_col1, row1_col2, row1_col3], [row2_col1, ...], ...]"
+    // or a string block containing LaTeX matrix format.
+    // Let's parse all numbers sequentially out of the string.
+    var numbers = rawText.match(/\d+/g);
+    
+    // Safety checks: we need exactly 9 numbers
+    if (!numbers || numbers.length !== 9) {
+        return false; 
+    }
+    
+    // Map them to integers
+    var entries = numbers.map(Number);
+    
+    // 2. Restrict entries strictly to 0, 1, or 2
+    for (var i = 0; i < 9; i++) {
+        if (entries[i] !== 0 && entries[i] !== 1 && entries[i] !== 2) {
+            return false; 
+        }
+    }
+    
+    // 3. Map the linear array of 9 numbers to a 3x3 Cayley table matrix
+    // Cayley Table T[row][col] mapping {0, 1, 2} to index {0, 1, 2}
+    var T = [
+        [entries[0], entries[1], entries[2]],
+        [entries[3], entries[4], entries[5]],
+        [entries[6], entries[7], entries[8]]
+    ];
+    
+    // 4. Test for associativity: (a * b) * c === a * (b * c)
+    // Here, operation a * b is defined by T[a][b]
+    for (var a = 0; a < 3; a++) {
+        for (var b = 0; b < 3; b++) {
+            for (var c = 0; c < 3; c++) {
+                var LHS = T[T[a][b]][c]; // (a * b) * c
+                var RHS = T[a][T[b][c]]; // a * (b * c)
+                if (LHS !== RHS) {
+                    return false; // Found a counterexample to associativity
+                }
+            }
+        }
+    }
+    
+    return true; // Meets all conditions
+}
+\end{javascript}
+
+\begin{problem}
+Fill in the $3 \times 3$ matrix below using only the entries $0, 1, $ and $2$ such that the resulting Cayley table represents an \textbf{associative} binary operation $*$ on the set $\{0, 1, 2\}$, where the rows and columns correspond to elements $0, 1, 2$ in order.
+
+\[
+\answer[validator=checkAssociativeCayley]{
+\begin{bmatrix}
+0 & 1 & 2 \\
+1 & 2 & 0 \\
+2 & 0 & 1 
+\end{bmatrix}
+}
+\]
+\end{problem}
+
+
+
+
 \end{document}

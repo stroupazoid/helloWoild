@@ -142,7 +142,7 @@ function checkAndDisplayMatrix(studentInput) {
     
     // 5. If it passes all tests, show the success message!
     if (feedbackElement) {
-        // Using "&#10003;" (HTML Entity) instead of the literal "✓" character prevents PDF compile errors
+        // Using an HTML entity code instead of the literal checkmark character to prevent compile errors
         feedbackElement.innerHTML = "<span style='color: green; font-weight: bold; font-size: 1.1em;'>&#10003; Good job! Your matrix is associative!</span>";
     }
     return true; 

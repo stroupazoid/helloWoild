@@ -116,36 +116,49 @@ function checkAndDisplayMatrix(studentInput) {
                       
     if (displayElement) {
         displayElement.innerHTML = "<p><strong>Your Input Matrix:</strong></p>" + latexMatrix;
-        // Tell MathJax to process/render the newly added LaTeX math code on the page
-        if (window.MathJax) {
-            window.MathJax.typesetPromise();
+        
+        // Robust check for MathJax v3 / v4
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise([displayElement]);
+        } 
+        // Fallback robust check for MathJax v2
+        else if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Queue) {
+            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, displayElement]);
         }
     }
     
     // 4. Test for associativity: (a * b) * c === a * (b * c)
+    var isAssociative = true;
+    var counterexampleText = "";
+    
     for (var a = 0; a < 3; a++) {
         for (var b = 0; b < 3; b++) {
             for (var c = 0; c < 3; c++) {
                 var LHS = T[T[a][b]][c]; 
                 var RHS = T[a][T[b][c]]; 
                 if (LHS !== RHS) {
-                    if (feedbackElement) {
-                        feedbackElement.innerHTML = "<span style='color: orange;'>This matrix is NOT associative. " +
-                            "Counterexample: (" + a + " * " + b + ") * " + c + " = " + LHS + " but " +
-                            a + " * (" + b + " * " + c + ") = " + RHS + ". Try again!</span>";
-                    }
-                    return false; 
+                    isAssociative = false;
+                    counterexampleText = "This matrix is NOT associative. <br/>" +
+                        "Counterexample: (" + a + " * " + b + ") * " + c + " = " + LHS + " but " +
+                        a + " * (" + b + " * " + c + ") = " + RHS + ". Try again!";
+                    break; 
                 }
             }
+            if (!isAssociative) break;
+        }
+        if (!isAssociative) break;
+    }
+    
+    // 5. Update feedback on the screen BEFORE returning status to Ximera
+    if (feedbackElement) {
+        if (isAssociative) {
+            feedbackElement.innerHTML = "<span style='color: green; font-weight: bold; font-size: 1.1em;'>&#10003; Good job! Your matrix is associative!</span>";
+        } else {
+            feedbackElement.innerHTML = "<span style='color: orange; font-weight: bold;'>" + counterexampleText + "</span>";
         }
     }
     
-    // 5. If it passes all tests, show the success message!
-    if (feedbackElement) {
-        // Using an HTML entity code instead of the literal checkmark character to prevent compile errors
-        feedbackElement.innerHTML = "<span style='color: green; font-weight: bold; font-size: 1.1em;'>&#10003; Good job! Your matrix is associative!</span>";
-    }
-    return true; 
+    return isAssociative; 
 }
 \end{javascript}
 

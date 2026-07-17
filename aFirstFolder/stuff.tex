@@ -196,19 +196,19 @@ Enter your list of 9 numbers here:
 
 What do you think thebelow animation is doing?
 
-\begin{rawhtml}
-<div style="max-width: 700px; margin: 0 auto; font-family: sans-serif; background: #f9f9f9; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+\begin{javascript}
+<div style="max-width: 700px; margin: 0 auto; font-family: sans-serif; background: rgb(249,249,249); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center;">
         <button id="playPauseBtn" style="padding: 6px 12px; cursor: pointer;">Pause</button>
         <button id="resetBtn" style="padding: 6px 12px; cursor: pointer;">Reset</button>
         <label>Speed: <input type="range" id="speedSlider" min="1" max="5" value="2" style="vertical-align: middle;"></label>
     </div>
     
-    <canvas id="cayleyCanvas" width="650" height="350" style="background: white; border: 1px solid #ccc; display: block; width: 100%; max-width: 650px;"></canvas>
+    <canvas id="cayleyCanvas" width="650" height="350" style="background: white; border: 1px solid rgb(204,204,204); display: block; width: 100%; max-width: 650px;"></canvas>
     
-    <div style="margin-top: 10px; max-height: 120px; overflow-y: auto; background: #eee; padding: 8px; border-radius: 4px; font-family: monospace; font-size: 13px;">
+    <div style="margin-top: 10px; max-height: 120px; overflow-y: auto; background: rgb(238,238,238); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 13px;">
         <strong>Non-Associative Counterexamples Found:</strong>
-        <div id="tallyList" style="margin-top: 5px; color: #b30000;">None yet.</div>
+        <div id="tallyList" style="margin-top: 5px; color: rgb(179,0,0);">None yet.</div>
     </div>
 </div>
 
@@ -221,29 +221,26 @@ What do you think thebelow animation is doing?
     const speedSlider = document.getElementById('speedSlider');
     const tallyList = document.getElementById('tallyList');
 
-    // A non-associative 3x3 Cayley Table (0, 1, 2)
-    // Example where (1*1)*2 != 1*(1*2)
     const table = [
         [0, 1, 2],
-        [1, 0, 0], // 1*1 = 0, 1*2 = 0
+        [1, 0, 0], 
         [2, 1, 1]
     ];
 
-    // Colors representing numbers 0, 1, 2
+    // Converted hex to rgb() strings to protect from LaTeX parser
     const elementColors = {
-        0: '#e74c3c', // Red-ish
-        1: '#f1c40f', // Yellow
-        2: '#9b59b6'  // Purple
+        0: 'rgb(231,76,60)', 
+        1: 'rgb(241,196,15)', 
+        2: 'rgb(155,89,182)'  
     };
 
     let isPlaying = true;
     let animationSpeed = 2; 
     let currentTriplet = { a: 0, b: 0, c: 0 };
-    let phase = 0; // 0: setup/move to first lookup, 1: intermediate lookup, 2: final lookup, 3: compare/meld
+    let phase = 0; 
     let phaseProgress = 0;
     const counterexamples = [];
 
-    // Grid coordinates helper
     const gridOffset = { x: 50, y: 70 };
     const cellSize = 50;
 
@@ -277,7 +274,6 @@ What do you think thebelow animation is doing?
 
             if (phase > 3) {
                 phase = 0;
-                // Move to next triplet
                 currentTriplet.c++;
                 if (currentTriplet.c > 2) {
                     currentTriplet.c = 0;
@@ -286,7 +282,7 @@ What do you think thebelow animation is doing?
                         currentTriplet.b = 0;
                         currentTriplet.a++;
                         if (currentTriplet.a > 2) {
-                            currentTriplet.a = 0; // Loop back
+                            currentTriplet.a = 0; 
                             counterexamples.length = 0;
                             tallyList.innerHTML = 'None yet (Restarted loop).';
                         }
@@ -302,23 +298,19 @@ What do you think thebelow animation is doing?
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         const { a, b, c } = currentTriplet;
         
-        // 1. Draw Cayley Table Structure
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = 'rgb(51,51,51)';
         ctx.lineWidth = 2;
         ctx.font = '16px sans-serif';
-        ctx.fillStyle = '#000';
+        ctx.fillStyle = 'rgb(0,0,0)';
         
-        // Headers labels
         ctx.fillText("a \\ b", gridOffset.x - 40, gridOffset.y - 15);
         for(let i=0; i<3; i++) {
             ctx.fillText(i, gridOffset.x + i*cellSize + 20, gridOffset.y - 15);
             ctx.fillText(i, gridOffset.x - 25, gridOffset.y + i*cellSize + 30);
         }
 
-        // Render Matrix squares
         for (let r = 0; r < 3; r++) {
             for (let col = 0; col < 3; col++) {
                 ctx.fillStyle = elementColors[table[r][col]];
@@ -327,58 +319,47 @@ What do you think thebelow animation is doing?
             }
         }
 
-        // 2. Compute Intermediate values
         const ab = table[a][b];
         const bc = table[b][c];
         const leftFinal = table[ab][c];
         const rightFinal = table[a][bc];
 
-        // 3. Track robot positions based on timeline phase
         let blackPos = { x: 450, y: 120 };
         let bluePos = { x: 450, y: 220 };
         let mergeColor = null;
 
-        // Path positions maps
         const pos_a_b = getCellCenter(a, b);
         const pos_ab_c = getCellCenter(ab, c);
         const pos_b_c = getCellCenter(b, c);
         const pos_a_bc = getCellCenter(a, bc);
 
         if (phase === 0) {
-            // Moving from starts to their first lookups
             blackPos.x = lerp(450, pos_a_b.x, phaseProgress);
             blackPos.y = lerp(120, pos_a_b.y, phaseProgress);
-
             bluePos.x = lerp(450, pos_b_c.x, phaseProgress);
             bluePos.y = lerp(220, pos_b_c.y, phaseProgress);
         } else if (phase === 1) {
-            // At first lookup point, reading results
             blackPos = pos_a_b;
             bluePos = pos_b_c;
         } else if (phase === 2) {
-            // Moving to final lookups
             blackPos.x = lerp(pos_a_b.x, pos_ab_c.x, phaseProgress);
             blackPos.y = lerp(pos_a_b.y, pos_ab_c.y, phaseProgress);
-
             bluePos.x = lerp(pos_b_c.x, pos_a_bc.x, phaseProgress);
             bluePos.y = lerp(pos_b_c.y, pos_a_bc.y, phaseProgress);
         } else if (phase === 3) {
-            // Moving to evaluation chamber to meld
             const targetX = 520;
             const targetY = 170;
             blackPos.x = lerp(pos_ab_c.x, targetX, phaseProgress);
             blackPos.y = lerp(pos_ab_c.y, targetY, phaseProgress);
-
             bluePos.x = lerp(pos_a_bc.x, targetX, phaseProgress);
             bluePos.y = lerp(pos_a_bc.y, targetY, phaseProgress);
 
             if (phaseProgress > 0.6) {
                 if (leftFinal === rightFinal) {
-                    mergeColor = '#2ecc71'; // Green
+                    mergeColor = 'rgb(46,204,113)'; // Green
                 } else {
-                    mergeColor = '#e74c3c'; // Red
-                    // Record uniquely once per step transition
-                    const key = `(${a}*${b})*${c} = ${leftFinal} ≠ ${a}*(${b}*${c}) = ${rightFinal}`;
+                    mergeColor = 'rgb(231,76,60)'; // Red
+                    const key = `(${a}*${b})*${c} = ${leftFinal} != ${a}*(${b}*${c}) = ${rightFinal}`;
                     if (!counterexamples.includes(key)) {
                         counterexamples.push(key);
                         tallyList.innerHTML = counterexamples.join('<br>');
@@ -387,37 +368,32 @@ What do you think thebelow animation is doing?
             }
         }
 
-        // 4. Draw HUD Text
-        ctx.fillStyle = '#000';
+        ctx.fillStyle = 'rgb(0,0,0)';
         ctx.font = 'bold 16px sans-serif';
         ctx.fillText(`Testing Triplet: (a=${a}, b=${b}, c=${c})`, 350, 40);
         
         ctx.font = '14px sans-serif';
-        ctx.fillStyle = '#111';
-        ctx.fillText(`Black Box: (${a} • ${b}) • ${c} = ${phase > 0 ? ab : '?'} • ${c} = ${phase > 2 ? leftFinal : '?'}`, 350, 90);
-        ctx.fillStyle = '#0066cc';
-        ctx.fillText(`Blue Box: ${a} • (${b} • ${c}) = ${a} • ${phase > 0 ? bc : '?'} = ${phase > 2 ? rightFinal : '?'}`, 350, 250);
+        ctx.fillStyle = 'rgb(17,17,17)';
+        ctx.fillText(`Black Box: (${a} * ${b}) * ${c} = ${phase > 0 ? ab : '?'} * ${c} = ${phase > 2 ? leftFinal : '?'}`, 350, 90);
+        ctx.fillStyle = 'rgb(0,102,204)';
+        ctx.fillText(`Blue Box: ${a} * (${b} * ${c}) = ${a} * ${phase > 0 ? bc : '?'} = ${phase > 2 ? rightFinal : '?'}`, 350, 250);
 
-        // Evaluation Node Box
-        ctx.strokeStyle = '#999';
+        ctx.strokeStyle = 'rgb(153,153,153)';
         ctx.lineWidth = 1;
         ctx.strokeRect(480, 135, 80, 70);
-        ctx.fillStyle = '#555';
+        ctx.fillStyle = 'rgb(85,85,85)';
         ctx.font = '12px sans-serif';
         ctx.fillText("Meld Unit", 493, 130);
 
-        // 5. Draw the Traveling Robot boxes
         if (mergeColor) {
             ctx.fillStyle = mergeColor;
             ctx.fillRect(blackPos.x - 12, blackPos.y - 12, 24, 24);
-            ctx.strokeStyle = '#000';
+            ctx.strokeStyle = 'rgb(0,0,0)';
             ctx.strokeRect(blackPos.x - 12, blackPos.y - 12, 24, 24);
         } else {
-            // Black Robot
-            ctx.fillStyle = '#222';
+            ctx.fillStyle = 'rgb(34,34,34)';
             ctx.fillRect(blackPos.x - 10, blackPos.y - 10, 20, 20);
-            // Blue Robot
-            ctx.fillStyle = '#0088ff';
+            ctx.fillStyle = 'rgb(0,136,255)';
             ctx.fillRect(bluePos.x - 10, bluePos.y - 10, 20, 20);
         }
     }
@@ -432,7 +408,7 @@ What do you think thebelow animation is doing?
     loop();
 })();
 </script>
-\endrawhtml
+\end{javascript}
 
 \end{document}
 

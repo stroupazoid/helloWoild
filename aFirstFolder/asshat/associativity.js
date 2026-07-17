@@ -181,7 +181,7 @@
         ctx.fillStyle = 'rgb(17,17,17)';
         ctx.fillText(`Black Box: (${a} * ${b}) * ${c} = ${phase > 0 ? ab : '?'} * ${c} = ${phase > 2 ? leftFinal : '?'}`, 350, 90);
         ctx.fillStyle = 'rgb(0,102,204)';
-        ctx.fillText(`Blue Box: ${a} * (${b} * ${c}) = ${a} * ${phase > 0 ? bc : '?'} = ${phase > 2 ? rightFinal : '?'}`, 350, 250);
+        ctx.fillText(`Blue Box: ${a} * (${b} * ${c}) = ${a} * ${phase > 0 ? bc : `?`} = ${phase > 2 ? rightFinal : `?`}`, 350, 250);
 
         ctx.strokeStyle = 'rgb(153,153,153)';
         ctx.lineWidth = 1;

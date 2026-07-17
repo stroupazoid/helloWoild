@@ -8,7 +8,7 @@
     controls.style.cssText = "margin-bottom: 10px; display: flex; gap: 10px; align-items: center;";
 
     const playPauseBtn = document.createElement('button');
-    playPauseBtn.textContent = 'Pause';
+    playPauseBtn.textContent = 'Play';
     playPauseBtn.style.cssText = "padding: 6px 12px; cursor: pointer;";
 
     const resetBtn = document.createElement('button');
@@ -46,7 +46,7 @@
     const table = [[0, 1, 2], [1, 0, 0], [2, 1, 1]];
     const elementColors = { 0: 'rgb(231,76,60)', 1: 'rgb(241,196,15)', 2: 'rgb(155,89,182)' };
     
-    let isPlaying = true;
+    let isPlaying = false;
     let animationSpeed = 2; 
     let currentTriplet = { a: 0, b: 0, c: 0 };
     let phase = 0; 

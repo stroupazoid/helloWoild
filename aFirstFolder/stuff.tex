@@ -72,14 +72,33 @@ function checkAndDisplayMatrix(studentInput) {
     // Parse all numbers sequentially out of the student's text input.
     var numbers = rawText.match(/\d+/g);
     
-    // Grab target HTML placeholders to show feedback and the matrix.
-    var feedbackElement = document.getElementById("matrixFeedback");
+    // Dynamic Element Creator: Safely generates placeholders if they don't exist
     var displayElement = document.getElementById("matrixDisplay");
+    var feedbackElement = document.getElementById("matrixFeedback");
+    
+    if (!displayElement || !feedbackElement) {
+        // Create display box
+        displayElement = document.createElement("div");
+        displayElement.id = "matrixDisplay";
+        displayElement.style.marginTop = "15px";
+        displayElement.style.marginBottom = "10px";
+        
+        // Create feedback text box
+        feedbackElement = document.createElement("div");
+        feedbackElement.id = "matrixFeedback";
+        feedbackElement.style.marginTop = "5px";
+        feedbackElement.style.marginBottom = "20px";
+        
+        // Find the closest problem block container to append these elements into
+        var targetContainer = document.querySelector('.problem') || document.body;
+        targetContainer.appendChild(displayElement);
+        targetContainer.appendChild(feedbackElement);
+    }
     
     // 1. Safety check: We need exactly 9 numbers.
     if (!numbers || numbers.length !== 9) {
-        if (feedbackElement) feedbackElement.innerHTML = "<span style='color: red;'>Please enter exactly 9 numbers separated by commas.</span>";
-        if (displayElement) displayElement.innerHTML = "";
+        feedbackElement.innerHTML = "<span style='color: red;'>Please enter exactly 9 numbers separated by commas.</span>";
+        displayElement.innerHTML = "";
         return false; 
     }
     
@@ -89,8 +108,8 @@ function checkAndDisplayMatrix(studentInput) {
     // 2. Restrict entries strictly to the elements 0, 1, or 2
     for (var i = 0; i < 9; i++) {
         if (entries[i] !== 0 && entries[i] !== 1 && entries[i] !== 2) {
-            if (feedbackElement) feedbackElement.innerHTML = "<span style='color: red;'>Error: You can only use the numbers 0, 1, and 2.</span>";
-            if (displayElement) displayElement.innerHTML = "";
+            feedbackElement.innerHTML = "<span style='color: red;'>Error: You can only use the numbers 0, 1, and 2.</span>";
+            displayElement.innerHTML = "";
             return false; 
         }
     }
@@ -131,26 +150,20 @@ function checkAndDisplayMatrix(studentInput) {
                       T[2][0] + " & " + T[2][1] + " & " + T[2][2] + 
                       " \\end{bmatrix} \\]";
                       
-    if (displayElement) {
-        displayElement.innerHTML = "<p><strong>Your Input Matrix:</strong></p>" + latexMatrix;
-        
-        // Robust check for MathJax v3 / v4
-        if (window.MathJax && window.MathJax.typesetPromise) {
-            window.MathJax.typesetPromise([displayElement]);
-        } 
-        // Fallback robust check for MathJax v2
-        else if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Queue) {
-            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, displayElement]);
-        }
+    displayElement.innerHTML = "<p><strong>Your Input Matrix:</strong></p>" + latexMatrix;
+    
+    // Robust check for MathJax v3 / v4 / v2 typesetting updates
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([displayElement]);
+    } else if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Queue) {
+        window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, displayElement]);
     }
     
     // 6. Update HTML feedback text containers
-    if (feedbackElement) {
-        if (isAssociative) {
-            feedbackElement.innerHTML = "<span style='color: green; font-weight: bold; font-size: 1.1em;'>&#10003; Good job! Your matrix is associative!</span>";
-        } else {
-            feedbackElement.innerHTML = "<span style='color: orange; font-weight: bold;'>" + counterexampleText + "</span>";
-        }
+    if (isAssociative) {
+        feedbackElement.innerHTML = "<span style='color: green; font-weight: bold; font-size: 1.1em;'>&#10003; Good job! Your matrix is associative!</span>";
+    } else {
+        feedbackElement.innerHTML = "<span style='color: orange; font-weight: bold;'>" + counterexampleText + "</span>";
     }
     
     return isAssociative; 
@@ -181,14 +194,6 @@ Enter your list of 9 numbers here:
 \answer[validator=checkAndDisplayMatrix]{0, 1, 2, 1, 2, 0, 2, 0, 1}
 \]
 \end{problem}
-
-% HTML containers for JS output injection
-\begin{onlineOnly}
-\begin{html}
-<div id="matrixDisplay" style="margin-top: 15px; margin-bottom: 10px;"></div>
-<div id="matrixFeedback" style="margin-top: 5px; margin-bottom: 20px;"></div>
-\end{html}
-\end{onlineOnly}
 
 
 % now this is a test comment

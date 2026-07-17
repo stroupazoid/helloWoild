@@ -197,37 +197,36 @@ Enter your list of 9 numbers here:
 What do you think thebelow animation is doing?
 
 \begin{javascript}
-<div style="max-width: 700px; margin: 0 auto; font-family: sans-serif; background: rgb(249,249,249); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+<div class="cayley-container" style="max-width: 700px; margin: 0 auto; font-family: sans-serif; background: rgb(249,249,249); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <div style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center;">
-        <button id="playPauseBtn" style="padding: 6px 12px; cursor: pointer;">Pause</button>
-        <button id="resetBtn" style="padding: 6px 12px; cursor: pointer;">Reset</button>
-        <label>Speed: <input type="range" id="speedSlider" min="1" max="5" value="2" style="vertical-align: middle;"></label>
+        <button class="playPauseBtn" style="padding: 6px 12px; cursor: pointer;">Pause</button>
+        <button class="resetBtn" style="padding: 6px 12px; cursor: pointer;">Reset</button>
+        <label>Speed: <input type="range" class="speedSlider" min="1" max="5" value="2" style="vertical-align: middle;"></label>
     </div>
     
-    <canvas id="cayleyCanvas" width="650" height="350" style="background: white; border: 1px solid rgb(204,204,204); display: block; width: 100%; max-width: 650px;"></canvas>
+    <canvas class="cayleyCanvas" width="650" height="350" style="background: white; border: 1px solid rgb(204,204,204); display: block; width: 100%; max-width: 650px;"></canvas>
     
     <div style="margin-top: 10px; max-height: 120px; overflow-y: auto; background: rgb(238,238,238); padding: 8px; border-radius: 4px; font-family: monospace; font-size: 13px;">
         <strong>Non-Associative Counterexamples Found:</strong>
-        <div id="tallyList" style="margin-top: 5px; color: rgb(179,0,0);">None yet.</div>
+        <div class="tallyList" style="margin-top: 5px; color: rgb(179,0,0);">None yet.</div>
     </div>
 </div>
 
 <script>
 (function() {
-    // Ximera safe bootstrapper: Waits for the DOM layout engine to mount the elements safely
+    // Relative scanning: Looks up the matching parent component wrapper
+    const currentScript = document.currentScript || Array.from(document.getElementsByTagName('script')).pop();
+    const container = currentScript.previousElementSibling;
+
     function initAnimation() {
-        const canvas = document.getElementById('cayleyCanvas');
-        if (!canvas) {
-            // Element not quite ready in the DOM yet, retry in 100ms
-            setTimeout(initAnimation, 100);
-            return;
-        }
+        const canvas = container.querySelector('.cayleyCanvas');
+        if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const speedSlider = document.getElementById('speedSlider');
-        const tallyList = document.getElementById('tallyList');
+        const playPauseBtn = container.querySelector('.playPauseBtn');
+        const resetBtn = container.querySelector('.resetBtn');
+        const speedSlider = container.querySelector('.speedSlider');
+        const tallyList = container.querySelector('.tallyList');
 
         const table = [
             [0, 1, 2],
@@ -406,21 +405,16 @@ What do you think thebelow animation is doing?
         }
 
         function loop() {
-            speedSlider.oninput = () => { animationSpeed = parseInt(speedSlider.value); };
+            if(speedSlider) animationSpeed = parseInt(speedSlider.value);
             updateLogic();
             draw();
             requestAnimationFrame(loop);
         }
-
         loop();
     }
 
-    // Attempt implementation right away; the safety check handles any timing offset.
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        initAnimation();
-    } else {
-        document.addEventListener('DOMContentLoaded', initAnimation);
-    }
+    // Direct initialization bypasses global window delays
+    setTimeout(initAnimation, 150);
 })();
 </script>
 \end{javascript}

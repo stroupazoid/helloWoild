@@ -214,198 +214,213 @@ What do you think thebelow animation is doing?
 
 <script>
 (function() {
-    const canvas = document.getElementById('cayleyCanvas');
-    const ctx = canvas.getContext('2d');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const speedSlider = document.getElementById('speedSlider');
-    const tallyList = document.getElementById('tallyList');
+    // Ximera safe bootstrapper: Waits for the DOM layout engine to mount the elements safely
+    function initAnimation() {
+        const canvas = document.getElementById('cayleyCanvas');
+        if (!canvas) {
+            // Element not quite ready in the DOM yet, retry in 100ms
+            setTimeout(initAnimation, 100);
+            return;
+        }
 
-    const table = [
-        [0, 1, 2],
-        [1, 0, 0], 
-        [2, 1, 1]
-    ];
+        const ctx = canvas.getContext('2d');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const speedSlider = document.getElementById('speedSlider');
+        const tallyList = document.getElementById('tallyList');
 
-    // Converted hex to rgb() strings to protect from LaTeX parser
-    const elementColors = {
-        0: 'rgb(231,76,60)', 
-        1: 'rgb(241,196,15)', 
-        2: 'rgb(155,89,182)'  
-    };
+        const table = [
+            [0, 1, 2],
+            [1, 0, 0], 
+            [2, 1, 1]
+        ];
 
-    let isPlaying = true;
-    let animationSpeed = 2; 
-    let currentTriplet = { a: 0, b: 0, c: 0 };
-    let phase = 0; 
-    let phaseProgress = 0;
-    const counterexamples = [];
-
-    const gridOffset = { x: 50, y: 70 };
-    const cellSize = 50;
-
-    function getCellCenter(row, col) {
-        return {
-            x: gridOffset.x + col * cellSize + cellSize / 2,
-            y: gridOffset.y + row * cellSize + cellSize / 2
+        const elementColors = {
+            0: 'rgb(231,76,60)', 
+            1: 'rgb(241,196,15)', 
+            2: 'rgb(155,89,182)'  
         };
-    }
 
-    playPauseBtn.onclick = () => {
-        isPlaying = !isPlaying;
-        playPauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
-    };
+        let isPlaying = true;
+        let animationSpeed = 2; 
+        let currentTriplet = { a: 0, b: 0, c: 0 };
+        let phase = 0; 
+        let phaseProgress = 0;
+        const counterexamples = [];
 
-    resetBtn.onclick = () => {
-        currentTriplet = { a: 0, b: 0, c: 0 };
-        phase = 0;
-        phaseProgress = 0;
-        counterexamples.length = 0;
-        tallyList.innerHTML = 'None yet.';
-    };
+        const gridOffset = { x: 50, y: 70 };
+        const cellSize = 50;
 
-    function updateLogic() {
-        if (!isPlaying) return;
+        function getCellCenter(row, col) {
+            return {
+                x: gridOffset.x + col * cellSize + cellSize / 2,
+                y: gridOffset.y + row * cellSize + cellSize / 2
+            };
+        }
 
-        phaseProgress += 0.01 * animationSpeed;
-        if (phaseProgress >= 1) {
+        playPauseBtn.onclick = () => {
+            isPlaying = !isPlaying;
+            playPauseBtn.textContent = isPlaying ? 'Pause' : 'Play';
+        };
+
+        resetBtn.onclick = () => {
+            currentTriplet = { a: 0, b: 0, c: 0 };
+            phase = 0;
             phaseProgress = 0;
-            phase++;
+            counterexamples.length = 0;
+            tallyList.innerHTML = 'None yet.';
+        };
 
-            if (phase > 3) {
-                phase = 0;
-                currentTriplet.c++;
-                if (currentTriplet.c > 2) {
-                    currentTriplet.c = 0;
-                    currentTriplet.b++;
-                    if (currentTriplet.b > 2) {
-                        currentTriplet.b = 0;
-                        currentTriplet.a++;
-                        if (currentTriplet.a > 2) {
-                            currentTriplet.a = 0; 
-                            counterexamples.length = 0;
-                            tallyList.innerHTML = 'None yet (Restarted loop).';
+        function updateLogic() {
+            if (!isPlaying) return;
+
+            phaseProgress += 0.01 * animationSpeed;
+            if (phaseProgress >= 1) {
+                phaseProgress = 0;
+                phase++;
+
+                if (phase > 3) {
+                    phase = 0;
+                    currentTriplet.c++;
+                    if (currentTriplet.c > 2) {
+                        currentTriplet.c = 0;
+                        currentTriplet.b++;
+                        if (currentTriplet.b > 2) {
+                            currentTriplet.b = 0;
+                            currentTriplet.a++;
+                            if (currentTriplet.a > 2) {
+                                currentTriplet.a = 0; 
+                                counterexamples.length = 0;
+                                tallyList.innerHTML = 'None yet (Restarted loop).';
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    function lerp(start, end, amt) {
-        return (1 - amt) * start + amt * end;
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const { a, b, c } = currentTriplet;
-        
-        ctx.strokeStyle = 'rgb(51,51,51)';
-        ctx.lineWidth = 2;
-        ctx.font = '16px sans-serif';
-        ctx.fillStyle = 'rgb(0,0,0)';
-        
-        ctx.fillText("a \\ b", gridOffset.x - 40, gridOffset.y - 15);
-        for(let i=0; i<3; i++) {
-            ctx.fillText(i, gridOffset.x + i*cellSize + 20, gridOffset.y - 15);
-            ctx.fillText(i, gridOffset.x - 25, gridOffset.y + i*cellSize + 30);
+        function lerp(start, end, amt) {
+            return (1 - amt) * start + amt * end;
         }
 
-        for (let r = 0; r < 3; r++) {
-            for (let col = 0; col < 3; col++) {
-                ctx.fillStyle = elementColors[table[r][col]];
-                ctx.fillRect(gridOffset.x + col * cellSize, gridOffset.y + r * cellSize, cellSize, cellSize);
-                ctx.strokeRect(gridOffset.x + col * cellSize, gridOffset.y + r * cellSize, cellSize, cellSize);
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const { a, b, c } = currentTriplet;
+            
+            ctx.strokeStyle = 'rgb(51,51,51)';
+            ctx.lineWidth = 2;
+            ctx.font = '16px sans-serif';
+            ctx.fillStyle = 'rgb(0,0,0)';
+            
+            ctx.fillText("a \\ b", gridOffset.x - 40, gridOffset.y - 15);
+            for(let i=0; i<3; i++) {
+                ctx.fillText(i, gridOffset.x + i*cellSize + 20, gridOffset.y - 15);
+                ctx.fillText(i, gridOffset.x - 25, gridOffset.y + i*cellSize + 30);
             }
-        }
 
-        const ab = table[a][b];
-        const bc = table[b][c];
-        const leftFinal = table[ab][c];
-        const rightFinal = table[a][bc];
+            for (let r = 0; r < 3; r++) {
+                for (let col = 0; col < 3; col++) {
+                    ctx.fillStyle = elementColors[table[r][col]];
+                    ctx.fillRect(gridOffset.x + col * cellSize, gridOffset.y + r * cellSize, cellSize, cellSize);
+                    ctx.strokeRect(gridOffset.x + col * cellSize, gridOffset.y + r * cellSize, cellSize, cellSize);
+                }
+            }
 
-        let blackPos = { x: 450, y: 120 };
-        let bluePos = { x: 450, y: 220 };
-        let mergeColor = null;
+            const ab = table[a][b];
+            const bc = table[b][c];
+            const leftFinal = table[ab][c];
+            const rightFinal = table[a][bc];
 
-        const pos_a_b = getCellCenter(a, b);
-        const pos_ab_c = getCellCenter(ab, c);
-        const pos_b_c = getCellCenter(b, c);
-        const pos_a_bc = getCellCenter(a, bc);
+            let blackPos = { x: 450, y: 120 };
+            let bluePos = { x: 450, y: 220 };
+            let mergeColor = null;
 
-        if (phase === 0) {
-            blackPos.x = lerp(450, pos_a_b.x, phaseProgress);
-            blackPos.y = lerp(120, pos_a_b.y, phaseProgress);
-            bluePos.x = lerp(450, pos_b_c.x, phaseProgress);
-            bluePos.y = lerp(220, pos_b_c.y, phaseProgress);
-        } else if (phase === 1) {
-            blackPos = pos_a_b;
-            bluePos = pos_b_c;
-        } else if (phase === 2) {
-            blackPos.x = lerp(pos_a_b.x, pos_ab_c.x, phaseProgress);
-            blackPos.y = lerp(pos_a_b.y, pos_ab_c.y, phaseProgress);
-            bluePos.x = lerp(pos_b_c.x, pos_a_bc.x, phaseProgress);
-            bluePos.y = lerp(pos_b_c.y, pos_a_bc.y, phaseProgress);
-        } else if (phase === 3) {
-            const targetX = 520;
-            const targetY = 170;
-            blackPos.x = lerp(pos_ab_c.x, targetX, phaseProgress);
-            blackPos.y = lerp(pos_ab_c.y, targetY, phaseProgress);
-            bluePos.x = lerp(pos_a_bc.x, targetX, phaseProgress);
-            bluePos.y = lerp(pos_a_bc.y, targetY, phaseProgress);
+            const pos_a_b = getCellCenter(a, b);
+            const pos_ab_c = getCellCenter(ab, c);
+            const pos_b_c = getCellCenter(b, c);
+            const pos_a_bc = getCellCenter(a, bc);
 
-            if (phaseProgress > 0.6) {
-                if (leftFinal === rightFinal) {
-                    mergeColor = 'rgb(46,204,113)'; // Green
-                } else {
-                    mergeColor = 'rgb(231,76,60)'; // Red
-                    const key = `(${a}*${b})*${c} = ${leftFinal} != ${a}*(${b}*${c}) = ${rightFinal}`;
-                    if (!counterexamples.includes(key)) {
-                        counterexamples.push(key);
-                        tallyList.innerHTML = counterexamples.join('<br>');
+            if (phase === 0) {
+                blackPos.x = lerp(450, pos_a_b.x, phaseProgress);
+                blackPos.y = lerp(120, pos_a_b.y, phaseProgress);
+                bluePos.x = lerp(450, pos_b_c.x, phaseProgress);
+                bluePos.y = lerp(220, pos_b_c.y, phaseProgress);
+            } else if (phase === 1) {
+                blackPos = pos_a_b;
+                bluePos = pos_b_c;
+            } else if (phase === 2) {
+                blackPos.x = lerp(pos_a_b.x, pos_ab_c.x, phaseProgress);
+                blackPos.y = lerp(pos_a_b.y, pos_ab_c.y, phaseProgress);
+                bluePos.x = lerp(pos_b_c.x, pos_a_bc.x, phaseProgress);
+                bluePos.y = lerp(pos_b_c.y, pos_a_bc.y, phaseProgress);
+            } else if (phase === 3) {
+                const targetX = 520;
+                const targetY = 170;
+                blackPos.x = lerp(pos_ab_c.x, targetX, phaseProgress);
+                blackPos.y = lerp(pos_ab_c.y, targetY, phaseProgress);
+                bluePos.x = lerp(pos_a_bc.x, targetX, phaseProgress);
+                bluePos.y = lerp(pos_a_bc.y, targetY, phaseProgress);
+
+                if (phaseProgress > 0.6) {
+                    if (leftFinal === rightFinal) {
+                        mergeColor = 'rgb(46,204,113)'; 
+                    } else {
+                        mergeColor = 'rgb(231,76,60)'; 
+                        const key = `(${a}*${b})*${c} = ${leftFinal} != ${a}*(${b}*${c}) = ${rightFinal}`;
+                        if (!counterexamples.includes(key)) {
+                            counterexamples.push(key);
+                            tallyList.innerHTML = counterexamples.join('<br>');
+                        }
                     }
                 }
             }
+
+            ctx.fillStyle = 'rgb(0,0,0)';
+            ctx.font = 'bold 16px sans-serif';
+            ctx.fillText(`Testing Triplet: (a=${a}, b=${b}, c=${c})`, 350, 40);
+            
+            ctx.font = '14px sans-serif';
+            ctx.fillStyle = 'rgb(17,17,17)';
+            ctx.fillText(`Black Box: (${a} * ${b}) * ${c} = ${phase > 0 ? ab : '?'} * ${c} = ${phase > 2 ? leftFinal : '?'}`, 350, 90);
+            ctx.fillStyle = 'rgb(0,102,204)';
+            ctx.fillText(`Blue Box: ${a} * (${b} * ${c}) = ${a} * ${phase > 0 ? bc : '?'} = ${phase > 2 ? rightFinal : '?'}`, 350, 250);
+
+            ctx.strokeStyle = 'rgb(153,153,153)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(480, 135, 80, 70);
+            ctx.fillStyle = 'rgb(85,85,85)';
+            ctx.font = '12px sans-serif';
+            ctx.fillText("Meld Unit", 493, 130);
+
+            if (mergeColor) {
+                ctx.fillStyle = mergeColor;
+                ctx.fillRect(blackPos.x - 12, blackPos.y - 12, 24, 24);
+                ctx.strokeStyle = 'rgb(0,0,0)';
+                ctx.strokeRect(blackPos.x - 12, blackPos.y - 12, 24, 24);
+            } else {
+                ctx.fillStyle = 'rgb(34,34,34)';
+                ctx.fillRect(blackPos.x - 10, blackPos.y - 10, 20, 20);
+                ctx.fillStyle = 'rgb(0,136,255)';
+                ctx.fillRect(bluePos.x - 10, bluePos.y - 10, 20, 20);
+            }
         }
 
-        ctx.fillStyle = 'rgb(0,0,0)';
-        ctx.font = 'bold 16px sans-serif';
-        ctx.fillText(`Testing Triplet: (a=${a}, b=${b}, c=${c})`, 350, 40);
-        
-        ctx.font = '14px sans-serif';
-        ctx.fillStyle = 'rgb(17,17,17)';
-        ctx.fillText(`Black Box: (${a} * ${b}) * ${c} = ${phase > 0 ? ab : '?'} * ${c} = ${phase > 2 ? leftFinal : '?'}`, 350, 90);
-        ctx.fillStyle = 'rgb(0,102,204)';
-        ctx.fillText(`Blue Box: ${a} * (${b} * ${c}) = ${a} * ${phase > 0 ? bc : '?'} = ${phase > 2 ? rightFinal : '?'}`, 350, 250);
-
-        ctx.strokeStyle = 'rgb(153,153,153)';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(480, 135, 80, 70);
-        ctx.fillStyle = 'rgb(85,85,85)';
-        ctx.font = '12px sans-serif';
-        ctx.fillText("Meld Unit", 493, 130);
-
-        if (mergeColor) {
-            ctx.fillStyle = mergeColor;
-            ctx.fillRect(blackPos.x - 12, blackPos.y - 12, 24, 24);
-            ctx.strokeStyle = 'rgb(0,0,0)';
-            ctx.strokeRect(blackPos.x - 12, blackPos.y - 12, 24, 24);
-        } else {
-            ctx.fillStyle = 'rgb(34,34,34)';
-            ctx.fillRect(blackPos.x - 10, blackPos.y - 10, 20, 20);
-            ctx.fillStyle = 'rgb(0,136,255)';
-            ctx.fillRect(bluePos.x - 10, bluePos.y - 10, 20, 20);
+        function loop() {
+            speedSlider.oninput = () => { animationSpeed = parseInt(speedSlider.value); };
+            updateLogic();
+            draw();
+            requestAnimationFrame(loop);
         }
+
+        loop();
     }
 
-    function loop() {
-        speedSlider.oninput = () => { animationSpeed = parseInt(speedSlider.value); };
-        updateLogic();
-        draw();
-        requestAnimationFrame(loop);
+    // Attempt implementation right away; the safety check handles any timing offset.
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initAnimation();
+    } else {
+        document.addEventListener('DOMContentLoaded', initAnimation);
     }
-
-    loop();
 })();
 </script>
 \end{javascript}

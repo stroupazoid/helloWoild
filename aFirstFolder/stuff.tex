@@ -72,7 +72,7 @@ function checkAndDisplayMatrix(studentInput) {
     // Parse all numbers sequentially out of the student's text input.
     var numbers = rawText.match(/\d+/g);
     
-    // Grab target HTML placeholders to show feedback and the matrix.
+    // Grab our target HTML placeholders to show feedback and the matrix.
     var feedbackElement = document.getElementById("matrixFeedback");
     var displayElement = document.getElementById("matrixDisplay");
     
@@ -102,6 +102,26 @@ function checkAndDisplayMatrix(studentInput) {
         [entries[6], entries[7], entries[8]]  
     ];
     
+    // Generate LaTeX string to dynamically show the student's matrix on the page
+    var latexMatrix = "\\[ \\begin{bmatrix} " + 
+                      T[0][0] + " & " + T[0][1] + " & " + T[0][2] + " \\\\ " +
+                      T[1][0] + " & " + T[1][1] + " & " + T[1][2] + " \\\\ " +
+                      T[2][0] + " & " + T[2][1] + " & " + T[2][2] + 
+                      " \\end{bmatrix} \\]";
+                      
+    if (displayElement) {
+        displayElement.innerHTML = "<p><strong>Your Input Matrix:</strong></p>" + latexMatrix;
+        
+        // Robust check for MathJax v3 / v4
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise([displayElement]);
+        } 
+        // Fallback robust check for MathJax v2
+        else if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Queue) {
+            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, displayElement]);
+        }
+    }
+    
     // 4. Test for associativity: (a * b) * c === a * (b * c)
     var isAssociative = true;
     var counterexampleText = "";
@@ -124,27 +144,7 @@ function checkAndDisplayMatrix(studentInput) {
         if (!isAssociative) break;
     }
     
-    // 5. Generate LaTeX string and dynamically show the student's matrix on the page
-    var latexMatrix = "\\[ \\begin{bmatrix} " + 
-                      T[0][0] + " & " + T[0][1] + " & " + T[0][2] + " \\\\ " +
-                      T[1][0] + " & " + T[1][1] + " & " + T[1][2] + " \\\\ " +
-                      T[2][0] + " & " + T[2][1] + " & " + T[2][2] + 
-                      " \\end{bmatrix} \\]";
-                      
-    if (displayElement) {
-        displayElement.innerHTML = "<p><strong>Your Input Matrix:</strong></p>" + latexMatrix;
-        
-        // Robust check for MathJax v3 / v4
-        if (window.MathJax && window.MathJax.typesetPromise) {
-            window.MathJax.typesetPromise([displayElement]);
-        } 
-        // Fallback robust check for MathJax v2
-        else if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Queue) {
-            window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, displayElement]);
-        }
-    }
-    
-    // 6. Update HTML feedback text containers
+    // 5. Update feedback on the screen BEFORE returning status to Ximera
     if (feedbackElement) {
         if (isAssociative) {
             feedbackElement.innerHTML = "<span style='color: green; font-weight: bold; font-size: 1.1em;'>&#10003; Good job! Your matrix is associative!</span>";
@@ -156,6 +156,32 @@ function checkAndDisplayMatrix(studentInput) {
     return isAssociative; 
 }
 \end{javascript}
+
+\begin{problem}
+Provide a list of $9$ numbers chosen from $\{0, 1, 2\}$ that form a $3 \times 3$ associative Cayley table.
+
+\bigskip
+\noindent\textbf{How to enter your answer:}
+\begin{itemize}
+    \item Enter exactly \textbf{9 numbers} separated by commas into the blue box.
+    \item Your list represents the matrix written row-by-row: \textbf{row 1, then row 2, then row 3}.
+    \item For example, typing \textbf{0, 1, 2, 1, 2, 0, 2, 0, 1} will generate the matrix:
+    \[
+    \begin{bmatrix}
+    0 & 1 & 2 \\
+    1 & 2 & 0 \\
+    2 & 0 & 1 
+    \end{bmatrix}
+    \]
+\end{itemize}
+\bigskip
+
+Enter your list of 9 numbers here:
+\[
+\answer[validator=checkAndDisplayMatrix]{0, 1, 2, 1, 2, 0, 2, 0, 1}
+\]
+\end{problem}
+
 
 % now this is a test comment
 

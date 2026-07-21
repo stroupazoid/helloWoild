@@ -11,15 +11,7 @@
  /* Remove indentation from Ximera table of contents */
 
 /* Move Ximera sidebar TOC items left */
-#toc li,
-#toc li a {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-#toc {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
+
 
  
 .xmhint::before {

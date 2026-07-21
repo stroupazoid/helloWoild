@@ -12,13 +12,7 @@
 
 /* Move Ximera sidebar TOC items left */
 
-/* Reduce table of contents / sidebar width */
-.nav-sidebar, 
-.ximera-sidebar,
-aside.sidebar {
-  width: 200px !important; /* Adjust default width as needed */
-  max-width: 20% !important;
-}
+
 
 /* Adjust main content area to take up remaining space */
 .main-content, 
@@ -234,3 +228,11 @@ e.g. use "P1", "Problem 1", "Prob 1", "Exciting Problem 1", etc.
 .outcomeHead:hover + .outcomeContent {
 	display: block;
 } */
+
+/* Reduce table of contents / sidebar width */
+.nav-sidebar, 
+.ximera-sidebar,
+aside.sidebar {
+  width: 200px !important; /* Adjust default width as needed */
+  max-width: 20% !important;
+}

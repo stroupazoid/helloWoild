@@ -249,3 +249,16 @@ aside.sidebar {
   padding-bottom: 4px !important;
   line-height: 1.2 !important;
 }
+
+/* Shrink the height of each sidebar row (chapters/sections) */
+.activity-card {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  min-height: unset !important;
+}
+
+.activity-card > a {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  line-height: 1.2 !important;
+}

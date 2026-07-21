@@ -9,15 +9,10 @@
  *   - become (almost) empty by default, because the ximeraServer default settings will becom English again
  */ 
  /* Remove indentation from Ximera table of contents */
-.toc-item,
-.toc-item > a,
-.section,
-.subsection {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-ul.toc,
-ul.toc ul {
+
+/* Move Ximera sidebar TOC items left */
+#toc li,
+#toc li a {
   margin-left: 0 !important;
   padding-left: 0 !important;
 }

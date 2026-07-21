@@ -236,3 +236,16 @@ aside.sidebar {
   width: 200px !important; /* Adjust default width as needed */
   max-width: 20% !important;
 }
+
+/* Shrink the height of each sidebar row (chapters/sections) */
+.toc .activity-card {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  min-height: unset !important;
+}
+
+.toc .activity-card > a {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  line-height: 1.2 !important;
+}

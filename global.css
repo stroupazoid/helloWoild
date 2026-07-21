@@ -12,7 +12,20 @@
 
 /* Move Ximera sidebar TOC items left */
 
+/* Reduce table of contents / sidebar width */
+.nav-sidebar, 
+.ximera-sidebar,
+aside.sidebar {
+  width: 200px !important; /* Adjust default width as needed */
+  max-width: 20% !important;
+}
 
+/* Adjust main content area to take up remaining space */
+.main-content, 
+main {
+  margin-left: 200px !important;
+  width: calc(100% - 200px) !important;
+}
  
 .xmhint::before {
     content: "Show hint" counter(hint_number, notfirst);

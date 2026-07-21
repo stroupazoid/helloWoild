@@ -8,7 +8,15 @@
  *   - be renamed xmHtmlStyle.css   (to sync with xmPreamble.tex and xmPrintStyle.sty)
  *   - become (almost) empty by default, because the ximeraServer default settings will becom English again
  */ 
- 
+ /* Remove indentation from Ximera table of contents */
+.toc-item,
+.toc-item > a,
+.section,
+.subsection {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
  
 .xmhint::before {
     content: "Show hint" counter(hint_number, notfirst);

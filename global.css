@@ -13,10 +13,6 @@
 /* Move Ximera sidebar TOC items left */
 
 
-body, main, #main-content, .table-of-contents {
-  background-color: red !important;
-}
-
 
 /* Adjust main content area to take up remaining space */
 .main-content, 
@@ -238,29 +234,35 @@ e.g. use "P1", "Problem 1", "Prob 1", "Exciting Problem 1", etc.
    REDUCE SIDEBAR / LEFT TAB BAR WIDTH
    ========================================== */
 
-.col-sm-3,
-.col-md-3,
-.sidebar-offcanvas,
-.table-of-contents {
+/* 1. Shrink the left sidebar container */
+.col-sm-3, 
+.col-md-3, 
+.sidebar-offcanvas, 
+.table-of-contents, 
+.sidebar {
   flex: 0 0 160px !important;
   max-width: 160px !important;
+  min-width: 160px !important;
   width: 160px !important;
 }
 
-.table-of-contents a,
-.sidebar-offcanvas a,
+/* 2. Constrain the text/buttons inside the sidebar */
+.table-of-contents a, 
+.sidebar-offcanvas a, 
 .nav-pills > li > a {
   max-width: 160px !important;
   box-sizing: border-box !important;
+  white-space: normal !important;
 }
 
-.col-sm-9,
-.col-md-9,
-main,
-#main-content,
+/* 3. Pull the main content leftward to close the gap */
+.col-sm-9, 
+.col-md-9, 
+main, 
+#main-content, 
 .main-content {
-  flex: 0 0 calc(100% - 170px) !important;
-  max-width: calc(100% - 170px) !important;
-  width: calc(100% - 170px) !important;
+  flex: 0 0 calc(100% - 160px) !important;
+  max-width: calc(100% - 160px) !important;
+  width: calc(100% - 160px) !important;
   margin-left: 0 !important;
 }

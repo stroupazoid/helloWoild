@@ -284,3 +284,29 @@ li.activity-card > a {
   white-space: normal !important; /* Allows long text to wrap to a second line */
   word-wrap: break-word !important;
 }
+
+/* ==========================================
+   SHRINK THE WHITE GAP & SHIFT TEXT LEFT
+   ========================================== */
+
+/* 1. Shrink the white background container to match your new bars */
+.table-of-contents,
+.sidebar-offcanvas,
+div[class*="col-md-3"],
+div[class*="col-sm-3"] {
+  width: 160px !important;
+  max-width: 160px !important;
+  min-width: 160px !important;
+  flex: 0 0 160px !important;
+}
+
+/* 2. Pull the main text area over to the left to fill the empty space */
+main,
+#main-content,
+.main-content,
+div[class*="col-md-9"],
+div[class*="col-sm-9"] {
+  width: calc(100% - 170px) !important;
+  max-width: calc(100% - 170px) !important;
+  flex: 0 0 calc(100% - 170px) !important;
+}

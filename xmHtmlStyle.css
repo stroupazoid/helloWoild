@@ -274,9 +274,9 @@ ximera-content,
 .col-lg-3, 
 .sidebar-offcanvas, 
 nav {
-  max-width: 50px !important;
-  flex: 0 0 50px !important;
-  width: 50px !important;
+  max-width: 300px !important;
+  flex: 0 0 300px !important;
+  width: 300px !important;
 }
 
 /* 2. Pull the main text area over to the left */
@@ -284,8 +284,8 @@ nav {
 .col-lg-9, 
 main, 
 #main-content {
-  max-width: calc(100% - 60px) !important;
-  flex: 0 0 calc(100% - 60px) !important;
+  max-width: calc(100% - 310px) !important;
+  flex: 0 0 calc(100% - 310px) !important;
   margin-left: 0 !important;
   left: 0 !important;
 }

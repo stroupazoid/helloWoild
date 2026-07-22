@@ -266,3 +266,21 @@ body > div > div.row > div:nth-child(2) {
   width: calc(100% - 170px) !important;
   margin-left: 0 !important;
 }
+
+/* ==========================================
+   SHRINK THE ABSOLUTE POSITIONED TAB BARS
+   ========================================== */
+
+li.activity-card,
+.activity-card.card.chapter {
+  width: 160px !important; /* Adjust this number to make it shorter/longer */
+  max-width: 160px !important;
+}
+
+/* Ensure the text and background fit inside the new shorter width */
+li.activity-card > a {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  white-space: normal !important; /* Allows long text to wrap to a second line */
+  word-wrap: break-word !important;
+}

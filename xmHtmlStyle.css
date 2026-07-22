@@ -266,52 +266,36 @@ ximera-content,
 }
 
 /* ==========================================
-   FORCE SIDEBAR & CONTENT TO SHIFT LEFT
+   REDUCE SIDEBAR / LEFT TAB BAR WIDTH
    ========================================== */
 
-/* ==========================================
-   FORCE XIMERA SIDEBAR WIDTH & SHIFT CONTENT
-   ========================================== */
-
-/* ==========================================
-   REDUCE HORIZONTAL LENGTH OF SIDEBAR TABS
-   ========================================== */
-
-/* ==========================================
-   XIMERA SIDEBAR & TAB WIDTH OVERRIDE
-   ========================================== */
-
-/* 1. Override Ximera's root layout variable for navigation width */
-:root {
-  --sidebar-width: 160px !important;
-  --toc-width: 160px !important;
-  --nav-width: 160px !important;
-}
-
-/* 2. Target Ximera Web Components / Custom Elements */
-xm-toc,
-xm-sidebar,
-.table-of-contents,
-.sidebar-offcanvas {
-  width: 160px !important;
-  max-width: 160px !important;
+/* 1. Shrink the left navigation column */
+.col-sm-3,
+.col-md-3,
+.sidebar-offcanvas,
+.table-of-contents {
   flex: 0 0 160px !important;
+  max-width: 160px !important;
+  width: 160px !important;
 }
 
-/* 3. Make the tab buttons/links fill only the smaller sidebar width */
+/* 2. Constrain the full-width tab links/buttons */
 .table-of-contents a,
 .sidebar-offcanvas a,
 .nav-pills > li > a {
-  max-width: 100% !important;
+  max-width: 160px !important;
   box-sizing: border-box !important;
+  word-wrap: break-word !important;
 }
 
-/* 4. Shift the main content body left to touch the new sidebar boundary */
-xm-main,
-.main-content,
+/* 3. Expand and shift the main content panel leftward */
+.col-sm-9,
+.col-md-9,
+main,
 #main-content,
-.col-md-9 {
-  margin-left: 170px !important;
-  width: calc(100% - 170px) !important;
+.main-content {
+  flex: 0 0 calc(100% - 170px) !important;
   max-width: calc(100% - 170px) !important;
+  width: calc(100% - 170px) !important;
+  margin-left: 0 !important;
 }

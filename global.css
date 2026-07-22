@@ -230,39 +230,39 @@ e.g. use "P1", "Problem 1", "Prob 1", "Exciting Problem 1", etc.
   display: block;
 }
 
+
 /* ==========================================
-   REDUCE SIDEBAR / LEFT TAB BAR WIDTH
+   FORCE LEFT TAB BARS TO SHRINK
    ========================================== */
 
-/* 1. Shrink the left sidebar container */
-.col-sm-3, 
-.col-md-3, 
-.sidebar-offcanvas, 
-.table-of-contents, 
-.sidebar {
+/* 1. Target the structural left column directly */
+#sidebar,
+.sidebar-offcanvas,
+.table-of-contents,
+body > div > div.row > div:first-child {
   flex: 0 0 160px !important;
   max-width: 160px !important;
-  min-width: 160px !important;
   width: 160px !important;
 }
 
-/* 2. Constrain the text/buttons inside the sidebar */
-.table-of-contents a, 
-.sidebar-offcanvas a, 
-.nav-pills > li > a {
-  max-width: 160px !important;
-  box-sizing: border-box !important;
+/* 2. Force the actual tab bars (orange/grey highlighted links) to shrink */
+ul.nav > li,
+ul.nav > li > a,
+.nav-pills > li > a,
+.sidebar a {
+  width: 150px !important;
+  max-width: 150px !important;
+  display: block !important;
   white-space: normal !important;
+  word-wrap: break-word !important;
 }
 
-/* 3. Pull the main content leftward to close the gap */
-.col-sm-9, 
-.col-md-9, 
-main, 
-#main-content, 
-.main-content {
-  flex: 0 0 calc(100% - 160px) !important;
-  max-width: calc(100% - 160px) !important;
-  width: calc(100% - 160px) !important;
+/* 3. Expand the main content panel to fill the rest of the screen */
+main,
+#main-content,
+body > div > div.row > div:nth-child(2) {
+  flex: 0 0 calc(100% - 170px) !important;
+  max-width: calc(100% - 170px) !important;
+  width: calc(100% - 170px) !important;
   margin-left: 0 !important;
 }

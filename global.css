@@ -17,7 +17,7 @@
 /* Adjust main content area to take up remaining space */
 .main-content, 
 main {
-  margin-left: 200px !important;
+  margin-left: 20px !important;
   width: calc(100% - 200px) !important;
 }
  

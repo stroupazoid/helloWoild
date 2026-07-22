@@ -273,37 +273,23 @@ ximera-content,
    FORCE XIMERA SIDEBAR WIDTH & SHIFT CONTENT
    ========================================== */
 
-/* 1. Force the outer container column to shrink */
-[class*="col-"].sidebar-offcanvas,
-.sidebar-offcanvas,
-.table-of-contents {
-  width: 140px !important;
-  max-width: 140px !important;
+/* ==========================================
+   REDUCE HORIZONTAL LENGTH OF SIDEBAR TABS
+   ========================================== */
+
+/* 1. Limit the width of the link/tab items */
+.sidebar-offcanvas a,
+.table-of-contents a,
+.nav-pills > li > a,
+.nav-stacked > li > a,
+.sidebar-offcanvas .nav > li {
+  max-width: 180px !important; /* Adjust this value (e.g. 150px) to make tabs shorter */
+  display: block !important;
+}
+
+/* 2. Optional: Keep the highlighted background fit to the text width */
+.sidebar-offcanvas .active > a,
+.table-of-contents .active > a {
+  width: fit-content !important;
   min-width: 140px !important;
-  flex: 0 0 140px !important;
-}
-
-/* 2. Target any inner divs carrying inline dynamic widths */
-.table-of-contents *,
-.sidebar-offcanvas * {
-  max-width: 100% !important;
-}
-
-/* 3. Adjust the search input box inside the narrow sidebar */
-.table-of-contents input,
-.table-of-contents .form-control {
-  width: 100% !important;
-  font-size: 11px !important;
-  padding: 2px 4px !important;
-}
-
-/* 4. Shift the main content container to the left */
-.col-md-9,
-.col-sm-9,
-main,
-#main-content {
-  width: calc(100% - 150px) !important;
-  max-width: calc(100% - 150px) !important;
-  flex: 0 0 calc(100% - 150px) !important;
-  margin-left: 0 !important;
 }

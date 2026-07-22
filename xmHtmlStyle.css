@@ -269,31 +269,25 @@ ximera-content,
    FORCE SIDEBAR & CONTENT TO SHIFT LEFT
    ========================================== */
 
-/* Reduce the left navigation drawer width */
-.navbar-collapse.sidebar-offcanvas,
-.table-of-contents,
-div.table-of-contents,
-.sidebar-offcanvas {
-  width: 180px !important;
-  max-width: 180px !important;
-  min-width: 180px !important;
-  flex: 0 0 180px !important;
+/* 1. Make the left sidebar column narrower */
+.col-sm-3,
+.col-md-3,
+.col-lg-3,
+div[class*="col-md-3"],
+div[class*="col-sm-3"] {
+  flex: 0 0 160px !important;
+  max-width: 160px !important;
+  min-width: 160px !important;
+  width: 160px !important;
 }
 
-/* Ensure child search inputs and links fit inside the narrow drawer */
-.table-of-contents input,
-.table-of-contents .form-control {
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-/* Adjust main content panel to start immediately to the right of the drawer */
-.main-content,
-main,
-#main-content,
+/* 2. Expand/shift the main right area into the freed space */
+.col-sm-9,
 .col-md-9,
-.col-lg-9 {
-  margin-left: 185px !important;
-  width: calc(100% - 185px) !important;
-  max-width: calc(100% - 185px) !important;
+.col-lg-9,
+div[class*="col-md-9"],
+div[class*="col-sm-9"] {
+  flex: 0 0 calc(100% - 160px) !important;
+  max-width: calc(100% - 160px) !important;
+  width: calc(100% - 160px) !important;
 }

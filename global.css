@@ -231,27 +231,36 @@ e.g. use "P1", "Problem 1", "Prob 1", "Exciting Problem 1", etc.
 
 
 
-/* Shrink the height of each sidebar row (chapters/sections) */
-.activity-card {
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
-  min-height: unset !important;
+/* 1. Target standard sidebar wrappers */
+.sidebar, 
+#sidebar, 
+nav, 
+ximera-sidebar, 
+.table-of-contents {
+  width: 200px !important;
+  max-width: 200px !important;
+  min-width: 200px !important;
 }
 
+/* 2. Fix the content container shift */
+main, 
+#main, 
+.main, 
+.content, 
+#content, 
+ximera-content,
+.document-content {
+  margin-left: 210px !important; /* Pulls text back to the left */
+  padding-left: 10px !important;
+  width: calc(100% - 220px) !important;
+  max-width: none !important;
+}
+
+/* 3. Reduce height/padding inside TOC items */
+.activity-card,
 .activity-card > a {
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  min-height: unset !important;
   line-height: 1.2 !important;
-}
-
-/* Reduce the width of the left navigation sidebar */
-nav, .sidebar, [role="navigation"] {
-  max-width: 250px !important; /* Adjust width to your preference */
-  width: 250px !important;
-}
-
-/* Allow the main content container to take up the remaining space */
-main, .main-content, #content {
-  margin-left: 260px !important; /* Should match sidebar width + margin */
-  max-width: calc(100% - 270px) !important;
 }

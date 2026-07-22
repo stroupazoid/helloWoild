@@ -217,26 +217,23 @@ e.g. use "P1", "Problem 1", "Prob 1", "Exciting Problem 1", etc.
 /* Outcome Formatting */
 
 .outcomeContent {
-	/* display: none; */
-	color: rgb(51, 0, 181);
+  /* display: none; */
+  color: rgb(51, 0, 181);
 }
+
 .outcomeHead {
-	text-align: center;
-	font-weight: bold;
+  text-align: center;
+  font-weight: bold;
 }
-/* 	  
+
 .outcomeHead:hover + .outcomeContent {
-	display: block;
-} */
-
-
-
+  display: block;
+}
 
 /* ==========================================
    REDUCE SIDEBAR / LEFT TAB BAR WIDTH
    ========================================== */
 
-/* 1. Shrink the left navigation column */
 .col-sm-3,
 .col-md-3,
 .sidebar-offcanvas,
@@ -246,16 +243,13 @@ e.g. use "P1", "Problem 1", "Prob 1", "Exciting Problem 1", etc.
   width: 160px !important;
 }
 
-/* 2. Constrain the full-width tab links/buttons */
 .table-of-contents a,
 .sidebar-offcanvas a,
 .nav-pills > li > a {
   max-width: 160px !important;
   box-sizing: border-box !important;
-  word-wrap: break-word !important;
 }
 
-/* 3. Expand and shift the main content panel leftward */
 .col-sm-9,
 .col-md-9,
 main,

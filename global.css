@@ -17,8 +17,8 @@
 /* Adjust main content area to take up remaining space */
 .main-content, 
 main {
-  margin-left: 20px !important;
-  width: calc(50% - 20px) !important;
+  margin-left: 200px !important;
+  width: calc(100% - 200px) !important;
 }
  
 .xmhint::before {

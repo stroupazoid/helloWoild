@@ -238,8 +238,8 @@ nav,
 ximera-sidebar, 
 .table-of-contents {
   width: 200px !important;
-  max-width: 200px !important;
-  min-width: 200px !important;
+  max-width: 50px !important;
+  min-width: 50px !important;
 }
 
 /* 2. Fix the content container shift */

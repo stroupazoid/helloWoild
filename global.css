@@ -297,11 +297,15 @@ li.activity-card > a {
   min-width: 160px !important;
 }
 
-/* 2. Pull the title bar and main text area leftward to fill the gap */
-.activity-title,
-.main-activity,
-main.activity {
-  margin-left: 170px !important; /* 160px width + 10px spacing */
+/* 2. Force all spacing properties on the main content to shrink */
+div.activity-title,
+div.main-activity,
+main.activity,
+#theActivity {
+  margin-left: 170px !important;
+  padding-left: 0px !important;
+  left: 0px !important;
   width: calc(100% - 170px) !important;
   max-width: calc(100% - 170px) !important;
+  transform: none !important;
 }

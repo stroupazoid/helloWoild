@@ -244,4 +244,14 @@ e.g. use "P1", "Problem 1", "Prob 1", "Exciting Problem 1", etc.
   line-height: 1.2 !important;
 }
 
+/* Reduce the width of the left navigation sidebar */
+nav, .sidebar, [role="navigation"] {
+  max-width: 250px !important; /* Adjust width to your preference */
+  width: 250px !important;
+}
 
+/* Allow the main content container to take up the remaining space */
+main, .main-content, #content {
+  margin-left: 260px !important; /* Should match sidebar width + margin */
+  max-width: calc(100% - 270px) !important;
+}

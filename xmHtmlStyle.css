@@ -269,28 +269,41 @@ ximera-content,
    FORCE SIDEBAR & CONTENT TO SHIFT LEFT
    ========================================== */
 
-/* 1. Shrink the Table of Contents container & sidebar drawer */
-.table-of-contents,
-div.table-of-contents,
-ul.nav-pills,
-.sidebar-offcanvas {
-  width: 170px !important;
-  max-width: 170px !important;
-  min-width: 170px !important;
+/* ==========================================
+   FORCE XIMERA SIDEBAR WIDTH & SHIFT CONTENT
+   ========================================== */
+
+/* 1. Force the outer container column to shrink */
+[class*="col-"].sidebar-offcanvas,
+.sidebar-offcanvas,
+.table-of-contents {
+  width: 140px !important;
+  max-width: 140px !important;
+  min-width: 140px !important;
+  flex: 0 0 140px !important;
 }
 
-/* 2. Pull the entire main page content panel leftward */
-div#main-content,
-div.main-content,
-.col-md-9,
-div[class*="col-"] {
-  position: relative !important;
-  left: -80px !important; /* Pulls content left towards sidebar */
+/* 2. Target any inner divs carrying inline dynamic widths */
+.table-of-contents *,
+.sidebar-offcanvas * {
+  max-width: 100% !important;
 }
 
-/* 3. Make the search bar and menu links wrap cleanly inside 170px */
+/* 3. Adjust the search input box inside the narrow sidebar */
 .table-of-contents input,
 .table-of-contents .form-control {
   width: 100% !important;
-  font-size: 12px !important;
+  font-size: 11px !important;
+  padding: 2px 4px !important;
+}
+
+/* 4. Shift the main content container to the left */
+.col-md-9,
+.col-sm-9,
+main,
+#main-content {
+  width: calc(100% - 150px) !important;
+  max-width: calc(100% - 150px) !important;
+  flex: 0 0 calc(100% - 150px) !important;
+  margin-left: 0 !important;
 }
